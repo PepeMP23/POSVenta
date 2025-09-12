@@ -1,0 +1,80 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+    <div class="main-content">
+        <div class="row position-relative">
+            <div class="col-md-3">
+                <div class="sidebar position-relative bg-beige m-0">
+                    <div class="profile-header">
+                        <img src="{{ user.image_url}}" alt="profilePic">
+                        <h5>{{ store.name }}</h5>
+                    </div>
+                    <nav class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="icon" href="{% url 'vendorHome' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class=" icon" href="{% url 'vendor_products' %}">Products</a>
+                        </li>
+                        
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="container">
+                    <div class="profile-info">
+                        <h2 class="bg-beige p-4 round-corner">{{ user.first_name }} {{ user.last_name }}</h2>
+                        <div class="info-group">
+                            <label>Email:</label>
+                            <p>{{ user.email }}</p>
+                        </div>
+                        <div class="info-group">
+                            <label>Creation date:</label>
+                            <p>{{ user.created_at }}</p>
+                        </div>
+                        <div class="info-group">
+                            <label>Role:</label>
+                            <p>{{ user.get_role_display }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-row-reverse">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class=" mx-2 btn btn-danger">Logout</button>
+                    </form>
+                    <a class="btn btn-info mx-2" href="{% url 'vendorHome' %}">Back to Dashboard</a>
+                </div>
+                
+            </div>
+           
+        </div>
+        
+        
+    </div>
+{% endblock %}
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Vendor Profile</title>
+</head>
+<body>
+    <h1>{{ store.name }}</h1>
+    <h2>Profile Information</h2>
+    <ul>
+        <li><strong>Email:</strong> {{ user.email }}</li>
+        <li><strong>Role:</strong> {{ user.get_role_display }}</li>
+        <li><strong>Created at:</strong> {{ user.created_at }}</li>
+        <li><strong>First Name:</strong> {{ user.first_name }}</li>
+        <li><strong>Last Name:</strong> {{ user.last_name }}</li>
+    </ul>
+    <a href="{% url 'vendorHome' %}">Back to Dashboard</a>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" style="border: none; background: none; padding: 0; color: blue; text-decoration: underline; cursor: pointer;">Logout</button>
+    </form>
+</body>
+</html> -->

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Barrio Store - Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'store/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <div class="login-image">
+                <img src="{% static 'logo.jpeg'%}" alt="Logo">
+                <h2>Bienvenido a Mi Barrio Store</h2>
+            </div>
+            <div class="login-form">
+                <form method="post">
+                    <div class="form-group">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    </div>
+                    <div class="form-group">
+                        <p>¿Aún no tienes una cuenta?<a href="{% url 'register' %}" class="text-light"> Crea una aquí</a></p>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Iniciar Sesión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+</body>
+</html> -->

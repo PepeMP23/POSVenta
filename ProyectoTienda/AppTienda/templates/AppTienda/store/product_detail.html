@@ -1,0 +1,65 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+
+<div class="container product-detail">
+    <div class="row">
+        <div class="col-md-6">
+            <img class="w-75" src="{{ product.image_url }}" alt="{{ product.name }}">
+        </div>
+        <div class="col-md-6 product-info">
+            <div class="store-info">
+                <div class="d-inline">
+                    <img class="image_icon rounded" src="{{ product.store.image_url}}" alt="storeLogo">
+                </div>
+                <span class="d-inline">{{ product.store.name }}</span>
+            </div>
+            <h2>{{ product.name }}</h2>
+            <p>{{ product.description }}</p>
+            <p class="price">${{ product.price }}</p>
+            {% if product.stock > 0 %}
+                <p>Disponible en tienda</p>
+            {% else %}
+                <p>Agotado</p>
+            {% endif %}
+            <p><a target="_blank" href="{{ product.store.google_maps_link }}">{{ product.store.address }}</a></p>
+            <div class="buttons">
+                <form class="btn" method="post" action="{% url 'add_to_cart' product.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-success" type="submit">Add to Cart</button>
+                </form>
+                <form class="btn" method="post" action="{% url 'buy_now' product.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-warning" type="submit">Buy Now</button>
+                </form>
+                <!-- <button class="btn btn-success">Agregar a Carrito</button>
+                <button class="btn btn-warning">Comprar ahora</button> -->
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Product Detail</title>
+</head>
+<body>
+    <h2>{{ product.name }}</h2>
+    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+    <p>{{ product.description }}</p>
+    <p>Price: {{ product.price }}</p>
+    <p>Category: {{ product.category.name }}</p>
+    <p>Store: {{ product.store.name }}</p>
+    <p>Store Address: {{ product.store.address }}</p>
+    <p>Store Location: <a href="{{ product.store.google_maps_link }}" target="_blank">View on Google Maps</a></p>
+    <form method="post" action="{% url 'add_to_cart' product.id %}">
+        {% csrf_token %}
+        <button type="submit">Add to Cart</button>
+    </form>
+    <form method="post" action="{% url 'buy_now' product.id %}">
+        {% csrf_token %}
+        <button type="submit">Buy Now</button>
+    </form>
+</body>
+</html> -->

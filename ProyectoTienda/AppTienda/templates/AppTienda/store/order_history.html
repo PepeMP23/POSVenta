@@ -1,0 +1,80 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+
+<div class="m-5">
+    <h2 class="order-title">Mis Pedidos</h2>
+    <div class="row p-2 m-2">
+        {% for order_data in orders_data %}
+        <div class="card order-card w-75">
+            <div class="card-header">
+                <div>
+                    <small class="text-muted">Order date</small>
+                    <p class="mb-0">{{ order_data.order.order_date }}</p>
+                </div>
+                <div>
+                    <small class="text-muted">Total</small>
+                    <p class="mb-0">${{ order_data.order.total_price }}</p>
+                </div>
+            </div>
+            {% for item in order_data.items %}
+            <div class="card-body">
+                <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+                <div>
+                    <h5>{{ item.product.name }}</h5>
+                    <p>{{ item.product.store.name }}</p>
+                    <p>Cost per Item: ${{ item.price }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+    
+</div>
+
+{% endblock %}
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Historial de Pedidos</title>
+    <style>
+        .order {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .order-header {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .order-item {
+            margin: 10px 0;
+        }
+        .order-item img {
+            width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Historial de Pedidos</h1>
+    {% for order_data in orders_data %}
+        <div class="order">
+            <div class="order-header">
+                <p>Fecha de Pedido: {{ order_data.order.order_date }}</p>
+                <p>Precio Total: ${{ order_data.order.total_price }}</p>
+                <p>Método de Pago: {{ order_data.order.payment.payment_type }}</p>
+            </div>
+            {% for item in order_data.items %}
+                <div class="order-item">
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                    <p>Nombre: {{ item.product.name }}</p>
+                    <p>Tienda: {{ item.product.store.name }}</p>
+                    <p>Precio por Pieza:</p>: ${{ item.price }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</body>
+</html> -->

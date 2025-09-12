@@ -1,0 +1,100 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        {% if cart_items %}
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Carrito</h4>
+                </div>
+                
+                <div class="card-body">
+                    {% for item in cart_items %}
+                    <div class="cart-item d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="img-fluid mr-3 w-25">
+                            <div>
+                                <h5>{{ item.product.name }}</h5>
+                                <small>{{ item.product.store.name }}</small>
+                                <p>Piezas {{ item.quantity }}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h5>${{ item.product.price }}</h5>
+                        </div>
+                        <div class="buttons">
+                            <form class="btn" method="post" action="{% url 'remove_from_cart' item.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-danger text-white" type="submit"><small>Eliminar Todos</small></button>
+                            </form>
+                            
+                            <form class="btn" method="post" action="{% url 'remove_from_carts' item.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-info text-white" type="submit"><small>Eliminar 1</small></button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="total-summary">
+                <h5>Subtotal ( {{ total_products }} Productos )</h5>
+                {% if item.promotion %}
+                    <p>Promoción: {{ item.promotion.id }}</p>
+                {% endif %}
+                <h5>Total: ${{ total_price }}</h5>
+                <a href="{% url 'checkout' %}" class="btn btn-primary btn-block mt-3">Proceder al pago</a>
+            </div>
+        </div>
+        {% else %}
+        <div>
+            <h2>Tu carrito de compras está vacío.</h2>
+            <a href="{% url 'index' %}" class="btn btn-warning">Volver</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Carrito</title>
+</head>
+<body>
+    <h1>Carrito</h1>
+    <div>
+        {% for item in cart_items %}
+            <div>
+                <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" width="100">
+                <p>{{ item.product.name }}</p>
+                <p>Tienda: {{ item.product.store.name }}</p>
+                <p>Precio: ${{ item.product.price }}</p>
+                <p>Cantidad: {{ item.quantity }}</p>
+                
+                {% if item.promotion %}
+                    <p>Promoción: {{ item.promotion.id }}</p>
+                {% endif %}
+                
+                <form method="post" action="{% url 'remove_from_cart' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Eliminar Todos</button>
+                </form>
+                
+                <form method="post" action="{% url 'remove_from_carts' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Eliminar 1</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+    <h1>Subtotal ( {{ total_products }} Productos )</h1>
+    <h2>Total: ${{ total_price }}</h2>
+    
+</body>
+</html> -->

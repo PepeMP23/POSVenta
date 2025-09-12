@@ -1,0 +1,93 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+
+<div class="pl-3 mt-4">
+    <h2 class="section-title">Popular Stores</h2>
+    <div class="row business-category">
+        <div class="d-flex justify-content-between flex-wrap">
+        {% for store in stores %}
+            <div class="product-card w-25 mx-3">
+                <a class="nav-link icon" href="{% url 'store_view' store.id %}">
+                    <img src="{{ store.image_url }}" alt="{{ store.name }}">
+                    <p class="name">{{ store.name }}</p>
+                </a>
+            </div>
+        {% endfor %}
+        </div>  
+    </div>
+    <h2 class="section-title">Products</h2>
+    <div class="bg-beige p-3 ">
+        <div class="row popular-products">
+            <div class="d-flex justify-content-between flex-wrap">
+            {% for product in products %}
+                <div class="product-card w-25 mx-3 bg-ligth-gray">
+                    <a class="icon nav-link" href="{% url 'product_detail' product.id %}">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                        <div class="row justify-content-between">
+                            <p class="name">{{ product.name }} </p>
+                            <p class="plain_text"> ${{ product.price }}</p>
+                        </div>
+                        
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock %}
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Store List</title>
+</head>
+<body>
+    <h2>Store List</h2>
+    <p>This is the store list page.</p>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Store List</title>
+    <style>
+        .store, .product {
+            display: inline-block;
+            width: 200px;
+            margin: 10px;
+            text-align: center;
+        }
+        .store img, .product img {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>Stores</h2>
+    <div class="stores">
+        {% for store in stores %}
+            <div class="store">
+                <a href="{% url 'store_view' store.id %}">
+                <img src="{{ store.image.url }}" alt="{{ store.name }}">
+                <p>{{ store.name }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <h2>Products</h2>
+    <div class="products">
+        {% for product in products %}
+            <div class="product">
+                <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <p>{{ product.name }}</p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    
+</body>
+</html> -->

@@ -1,0 +1,62 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+
+<div class="main-content">
+    <div class="row position-relative">
+        <div class="col-md-3 m-0">
+            <div class="sidebar position-relative bg-beige m-0 p-3 name">
+                <h5>{{ store.name }}</h5>
+                <img class="rounded w-100 my-2" src="{{ store.image_url }}" alt="{{ store.name }}">
+                <p>Categories: {{ store.categories }}</p>
+                <p>Address: {{ store.address }}</p>
+            </div>
+        </div>
+        <div class="col-md-9 m-0">
+            <div class="container bg-beige">
+                <div class="row">
+                    <div class="d-flex justify-content-between flex-wrap">
+                        {% for product in products %}
+                        <div class="product w-30 m-2">
+                            <a class="nav-link icon" href="{% url 'product_detail' product.id %}">
+                                <img class="w-75" src="{{ product.image_url }}" alt="{{ product.name }}" width="100">
+                                <p>{{ product.name }}</p>
+                                <p class="description_text">{{ product.description }}</p>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ store.name }}</title>
+</head>
+<body>
+    <h1>{{ store.name }}</h1>
+    <img src="{{ store.image.url }}" alt="{{ store.name }}" width="200">
+    <p>Categorías: {{ store.categories }}</p>
+    <p>Dirección: {{ store.address }}</p>
+    
+    <h2>Productos</h2>
+    <div class="products">
+        {% for product in products %}
+            <div class="product">
+                <a href="{% url 'product_detail' product.id %}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="100">
+                    <p>{{ product.name }}</p>
+                    <p>{{ product.description }}</p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html> -->

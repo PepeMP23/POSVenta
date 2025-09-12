@@ -1,0 +1,60 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+<div class="main-content">
+    <div class="row position-relative">
+        <div class="col-md-6 m-0">
+            <div class=" m-4">
+                <h1 class="section-title">Welcome, {{ user.username }}!</h1>
+                <h3>Store Information</h3>
+                <p><strong>Name: </strong>{{ store.name }}</p>
+                <p><strong>Description:</strong> {{ store.description }}</p>
+                <p><strong>Address:</strong> {{ store.address }}</p>
+                <strong>Google Maps Link:</strong><a href="{{ store.google_maps_link }}" target="_blank"><p> {{ store.google_maps_link }}</p></a>
+                <p><strong>Created At:</strong> {{ store.created_at }}</p>
+
+            </div>
+        </div>
+        <div class="col-md-6 m-0">
+            <div class="container">
+                <div class="row">
+                    <div class="d-flex justify-content-between flex-wrap">
+                        {% if store.image_url %}
+                        <img class="w-75 rounded" src="{{ store.image_url }}" alt="Store Image">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
+
+
+    <!-- <!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vendor Dashboard</title>
+</head>
+<body>
+    <h2>Welcome, {{ user.username }}!</h2>
+    
+    <h3>Store Information</h3>
+    <p><strong>Name:</strong> {{ store.name }}</p>
+    <p><strong>Description:</strong> {{ store.description }}</p>
+    <p><strong>Address:</strong> {{ store.address }}</p>
+    <p><strong>Google Maps Link:</strong> {{ store.google_maps_link }}</p>
+    <p><strong>Created At:</strong> {{ store.created_at }}</p>
+    {% if store.image_url %}
+    <img src="{{ store.image_url }}" alt="Store Image">
+    {% endif %}
+
+    <hr>
+    
+    <a href="{% url 'manage_store' %}">Manage Store</a>
+    <a href="{% url 'vendor_profile' %}">Profile</a>
+    <a href="{% url 'vendor_products' %}">Products</a>
+     Otras opciones del dashboard
+</body>
+</html>-->

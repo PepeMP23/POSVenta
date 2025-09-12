@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Barrio Store</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'store/styles.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+</head>
+<body class="nunito">
+    <header class="bg-danger text-white py-1">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+            {% if user.is_authenticated %}
+                {% if user.role == 'vendor' %}
+                <div class="d-flex align-items-center">
+                    <a href="{% url 'vendorHome' %}"><img src="{% static 'logo.jpeg'%}" alt="logo" width="30" class="mr-3"></a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto px-3">
+                        <li class="nav-item">
+                            <a class="nav-link icon" href="{% url 'vendorHome' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link icon" href="{% url 'manage_store' %}">Manage Store</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link icon" href="{% url 'vendor_products' %}">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link icon" href="{% url 'list_promotions' %}">Current Offers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link icon" href="{% url 'sales_history' %}">My Sales</a>
+                        </li>
+                    </ul>
+
+                    <a href="{% url 'vendor_profile' %}" class="my-2 my-sm-0 icon"><i class="bi bi-person-circle" width="30"></i></a>
+                </div>
+                {% endif %}
+                {% if user.role == 'customer' %}
+                <div class="d-flex align-items-center">
+                    <a href="{% url 'index' %}"><img src="{% static 'logo.jpeg'%}" alt="logo" width="30" class="mr-3"></a>
+                    <!-- Add an item that sends to the browser of the page -->
+                    <a class="navbar-brand" href="{% url 'search_stores' %}">Search Stores <i class="bi bi-search mx-2"></i></a>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto px-3">
+                        <li class="nav-item">
+                            <a class="nav-link icon" href="{% url 'index' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link icon" href="{% url 'order_history' %}">My orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link icon" href="{% url 'products_with_offers' %}">Sales</a>
+                        </li>
+                    </ul>
+
+                    <a href="{% url 'cart' %}" class="my-2 my-sm-0 icon"><i class="bi bi-cart mr-3" width="30"></i></a>
+                    <a href="{% url 'profile' %}" class="my-2 my-sm-0 icon"><i class="bi bi-person-circle" width="30"></i></a>
+                </div>
+                {% endif %}
+            {% else %}
+            <div class="d-flex align-items-center">
+                <a href="{% url 'index' %}"><img src="{% static 'logo.jpeg'%}" alt="logo" width="30" class="mr-3"></a>
+                <!-- Add an item that sends to the browser of the page -->
+                <a class="navbar-brand" href="{% url 'search_stores' %}">Search Stores <i class="bi bi-search mx-2"></i></a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto px-3">
+                    <li class="nav-item">
+                        <a class="nav-link icon" href="{% url 'index' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link icon" href="{% url 'login' %}">My orders</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link icon" href="{% url 'login' %}">Sales</a>
+                    </li>
+                </ul>
+
+                <a href="{% url 'login' %}" class="my-2 my-sm-0 icon"><i class="bi bi-cart mr-3" width="30"></i></a>
+                <a href="{% url 'login' %}" class="my-2 my-sm-0 icon"><i class="bi bi-person-circle" width="30"></i></a>
+            </div>
+            {% endif %}
+        </nav>
+    </header>
+    {% block content %}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+
+<!-- #248E8A
+#B82834
+#F0AF33
+#FFFFF9
+#F5F5EA -->

@@ -1,0 +1,31 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h1 class="section-title m-2">Add Promotion</h1>
+        <div class="form-group m-3">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-info" type="submit">Guardar</button>
+            </form>
+        </div>
+        
+</div>
+
+{% endblock %}
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Agregar Promoción</title>
+</head>
+<body>
+    <h1>Agregar Promoción</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html> -->

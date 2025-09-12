@@ -1,0 +1,62 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+<div class="main-content">
+    <div class="row position-relative">
+        <div class="col-md-3">
+            <div class="sidebar position-relative bg-beige m-0">
+                <div class="profile-header">
+                    <img src="{{ store.image_url }}" alt="profilePic">
+                    <h5>{{ store.name }}</h5>
+                </div>
+                <nav class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="icon" href="{% url 'vendorHome' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="icon" href="{% url 'vendor_products' %}">Products</a>
+                    </li>
+                </nav>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="container">
+                <div class="profile-info">
+                    <h2 class="bg-beige p-4 round-corner">{% if form.instance.pk %}Edit Store{% else %}Create Store{% endif %}</h2>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ form.as_p }}
+                        </div>
+                        
+                        <button class="btn btn-success" type="submit">{% if form.instance.pk %}Update Store{% else %}Create Store{% endif %}</button>
+                    </form>
+                </div>
+                <a class="btn btn-info m-3" href="{% url 'vendorHome' %}">Back to Dashboard</a>
+            </div>
+            
+            
+        </div>
+       
+    </div>
+    
+    
+</div>
+
+{% endblock %}
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Store</title>
+</head>
+<body>
+    <h2>{% if form.instance.pk %}Edit Store{% else %}Create Store{% endif %}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% if form.instance.pk %}Update Store{% else %}Create Store{% endif %}</button>
+    </form>
+    <a href="{% url 'vendorHome' %}">Back to Dashboard</a>
+</body>
+</html> -->

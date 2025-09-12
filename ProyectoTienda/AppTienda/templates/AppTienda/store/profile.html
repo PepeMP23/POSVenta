@@ -1,0 +1,76 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+
+<div class="main-content">
+    <div class="row position-relative">
+        <div class="col-md-3">
+            <div class="sidebar position-relative bg-beige m-0">
+                <div class="profile-header">
+                    <img src="{{ user.image_url}}" alt="profilePic">
+                    <h5>{{ user.name }}</h5>
+                </div>
+                <nav class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="icon" href="{% url 'index' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class=" icon" href="{% url 'order_history' %}">Orders</a>
+                    </li>
+                    
+                </nav>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="container">
+                <div class="profile-info">
+                    <h2 class="bg-beige p-4 round-corner">{{ user.get_full_name }}</h2>
+                    <div class="info-group">
+                        <label>Email:</label>
+                        <p>{{ user.email }}</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Username:</label>
+                        <p>{{ user.username }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-row-reverse">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class=" mx-2 btn btn-danger">Logout</button>
+                </form>
+                <a class="btn btn-info mx-2" href="{% url 'index' %}">Back to Dashboard</a>
+            </div>
+            
+        </div>
+    </div>
+    
+    
+</div>
+
+{% endblock %}
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+</head>
+<body>
+    <h1>Perfil de {{ user.username }}</h1>
+    <div>
+        <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+        <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
+        <p><strong>Nombre completo:</strong> {{ user.get_full_name }}</p>
+        
+
+    </div>
+
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" style="border: none; background: none; padding: 0; color: blue; text-decoration: underline; cursor: pointer;">Logout</button>
+    </form>
+</body>
+</html> -->

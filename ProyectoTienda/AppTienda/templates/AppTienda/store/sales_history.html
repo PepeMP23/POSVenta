@@ -1,0 +1,75 @@
+{% extends "AppTienda/master.html" %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Ventas del mes section -->
+    <div class="row sales-of-the-month">
+        <div class="d-flex justify-content-between flex-wrap">
+            {% if orders_data %}
+                {% for order in orders_data %}
+                    {% for item in order.items %}
+                        <div class="card">
+                            <div class="row no-gutters">
+                                <div class="col-md-3">
+                                    <img class="w-100" src="{{ item.product.image_url }}" alt="{{ item.product.name }}">
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ item.product.name }}</h5>
+                                        <p class="card-text">Total of items sold: {{ item.quantity }}</p>
+                                        <p class="card-text">Unitary cost: ${{ item.price }}</p>
+                                        <p class="card-text">Total of all orders: ${{ order.total_price }}</p>
+                                        <p class="card-text">Description: {{ item.product.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% else %}
+                <p>No hay ventas para mostrar.</p>
+            {% endif %}
+        </div>
+        
+    </div>
+</div>
+    
+{% endblock %}
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Ventas</title>
+</head>
+<body>
+    <h1>Historial de Ventas</h1>
+
+    {% if orders_data %}
+        {% for order in orders_data %}
+            <div class="order" style="border: 1px solid black; margin-bottom: 20px; padding: 10px;">
+                <h2>Fecha de Pedido: {{ order.order_date }}</h2>
+                <p>Precio Total de Productos Vendidos: ${{ order.total_price }}</p>
+                <p>Método de Pago: {{ order.payment_type }}</p>
+
+                <h3>Productos:</h3>
+                {% for item in order.items %}
+                    <div style="border: 1px solid gray; margin: 10px; padding: 10px;">
+                        <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" width="100">
+                        <p>Producto: {{ item.product.name }}</p>
+                        <p>Descripción: {{ item.product.description }}</p>
+                        <p>Precio Unitario: ${{ item.price }}</p>
+                        <p>Cantidad: {{ item.quantity }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No hay ventas para mostrar.</p>
+    {% endif %}
+</body>
+</html> -->
