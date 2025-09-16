@@ -1,13 +1,23 @@
-from django.http import HttpResponseNotFound
-from django.shortcuts import render
 from functools import wraps
+from django.shortcuts import redirect
+from django.contrib import messages
 
-def user_passes_test_404(test_func):
-    def decorator(view_func):
-        @wraps(view_func)
-        def _wrapped_view(request, *args, **kwargs):
-            if test_func(request.user):
-                return view_func(request, *args, **kwargs)
-            return render(request, 'AppTienda/404.html', {})
-        return _wrapped_view
-    return decorator
+ALLOWED_ROLES = {"admin","vendor"}
+
+def user_can_manage(user) -> bool:
+    return bool(
+        getattr(user, "is_superuser", False)
+        or getattr(user, "is_staff", False)
+        or getattr(user, "role", None) in ALLOWED_ROLES
+    )
+
+def can_manage_required(view):
+    @wraps(view)
+    def _wrap(request, *a, **kw):
+        if not request.user.is_authenticated:
+            return redirect("login")
+        if not user_can_manage(request.user):
+            messages.error(request, "No tienes permisos para esta acción.")
+            return redirect("dashboard")
+        return view(request, *a, **kw)
+    return _wrap

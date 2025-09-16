@@ -1,0 +1,81 @@
+{% extends "AppTienda/base.html" %}
+{% block title %}Categorías{% endblock %}
+{% block content %}
+<div class="container">
+  {% if messages %}{% for m in messages %}<div class="alert alert-{{ m.tags }} py-2">{{ m }}</div>{% endfor %}{% endif %}
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Categorías</h4>
+    {% if can_manage %}
+      <a href="{% url 'categories_add' %}" class="btn btn-primary">Nueva categoría</a>
+    {% endif %}
+  </div>
+
+  <form method="get" class="mb-3">
+    <div class="input-group">
+      <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Buscar por nombre o descripción">
+      <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+    </div>
+  </form>
+
+  <div class="table-responsive border rounded">
+    <table class="table table-sm align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th style="width:80px;">ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th style="width:180px;">Creado</th>
+          <th style="width:160px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for c in page_obj.object_list %}
+        <tr>
+          <td>{{ c.id }}</td>
+          <td>{{ c.name }}</td>
+          <td class="text-truncate" style="max-width: 420px;">{{ c.description|default:"—" }}</td>
+          <td>{{ c.created_at|date:"Y-m-d H:i" }}</td>
+          <td>
+            <div class="btn-group btn-group-sm">
+              <a href="{% url 'categories_edit' c.id %}" class="btn btn-outline-secondary">Editar</a>
+              {% if can_manage %}
+                <a href="{% url 'categories_delete' c.id %}" class="btn btn-outline-danger">Eliminar</a>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center py-4 text-muted">Sin resultados</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if page_obj.paginator.num_pages > 1 %}
+  <nav class="mt-3">
+    <ul class="pagination pagination-sm mb-0">
+      {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ page_obj.previous_page_number }}">«</a></li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">«</span></li>
+      {% endif %}
+
+      {% for i in page_obj.paginator.page_range %}
+        {% if i == page_obj.number %}
+          <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+        {% else %}
+          <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?q={{ query }}&page={{ page_obj.next_page_number }}">»</a></li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">»</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}

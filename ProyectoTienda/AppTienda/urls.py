@@ -1,45 +1,52 @@
 from django.urls import path
-from django.conf.urls import handler404
-from . import views
+from . import views as v
+from . import views_category as cat
 
-handler404 = 'AppTienda.views.error_404_view'
 
 urlpatterns = [
-    path("", views.store_list, name="index"),
-    path('register/', views.register, name='register'),
-    path('login/', views.login_view, name='login'),
-    path('add_to_cart/<int:product_id>/', views.add_to_cart, name='add_to_cart'),
-    path('vendorHome/', views.vendorHome, name='vendorHome'),
-    path('product/<int:product_id>/', views.product_detail, name='product_detail'),
-    path('buy_now/<int:product_id>/', views.buy_now, name='buy_now'),
-    path('manage_store/', views.manage_store, name='manage_store'),
-    path('vendor/products/', views.vendor_products, name='vendor_products'),
-    path('vendor/products/create/', views.create_product, name='create_product'),
-    path('vendor/profile/', views.vendor_profile, name='vendor_profile'),
-    path('cart/', views.cart_view, name='cart'),
-    path('checkout/', views.checkout_views, name='checkout'),
-    path('cart/remove/<int:item_id>/', views.remove_from_cart, {'remove_all': True}, name='remove_from_cart'),
-    path('cart/removes/<int:item_id>/', views.remove_from_carts, {'remove_all': False}, name='remove_from_carts'),
-    path('order-history/', views.order_history, name='order_history'),
-    path('profile/', views.profile_view, name='profile'),
-    path('store/<int:store_id>/', views.store_view, name='store_view'),
-    path('sales_history/', views.sales_history_view, name='sales_history'),
-    path('add_promotion/', views.add_promotion, name='add_promotion'),
-    path('list_promotions/', views.list_promotions, name='list_promotions'),
-    path('products_with_offers/', views.products_with_offers, name='products_with_offers'),
-    path('search_stores/', views.search_stores, name='search_stores'),
-    path('product/edit/<int:product_id>/', views.edit_product, name='edit_product'),
-    
-    # path('order_success/', views.order_success, name='order_success'),
-    
+    path("", v.dashboard, name="index"),
+    path("dashboard/", v.dashboard, name="dashboard"),
+    path("login/", v.login_view, name="login"),
+    path("logout/", v.logout_view, name="logout"),
 
+    # Users
+    path("modules/users/", v.users_list, name="users_list"),
+    path("modules/users/add/", v.users_add, name="users_add"),
+    path("modules/users/<int:pk>/edit/", v.users_edit, name="users_edit"),
+    path("modules/users/<int:pk>/delete/", v.users_delete, name="users_delete"),
 
+    # Customers (separados de user)
+    path("modules/customers/", v.customers_list, name="customers_list"),
+    path("modules/customers/add/", v.customers_add, name="customers_add"),
+    path("modules/customers/<int:pk>/edit/", v.customers_edit, name="customers_edit"),
+    path("modules/customers/<int:pk>/delete/", v.customers_delete, name="customers_delete"),
 
-    
+    # Categories
+    path("modules/categories/", v.categories_list, name="categories_list"),
+    path("modules/categories/add/", v.categories_add, name="categories_add"),
+    path("modules/categories/<int:pk>/edit/", v.categories_edit, name="categories_edit"),
+    path("modules/categories/<int:pk>/delete/", v.categories_delete, name="categories_delete"),
+
+    # Products
+    path("modules/products/", v.products_list, name="products_list"),
+    path("modules/products/add/", v.products_add, name="products_add"),
+    path("modules/products/<int:pk>/edit/", v.products_edit, name="products_edit"),
+    path("modules/products/<int:pk>/delete/", v.products_delete, name="products_delete"),
+
+    # Stock
+    path("modules/stock/", v.stock_list, name="stock_list"),
+    path("modules/stock/add/", v.stock_add, name="stock_add"),
+    path("modules/stock/<int:pk>/delete/", v.stock_delete, name="stock_delete"),
+
+    # Sales
+    path("modules/sales/", v.sales_list, name="sales_list"),
+    path("modules/sales/add/", v.sales_add, name="sales_add"),
+    path("modules/sales/<int:pk>/delete/", v.sales_delete, name="sales_delete"),
+
+    # Categories
+    path("modules/categories/", cat.categories_list, name="categories_list"),
+    path("modules/categories/add/", cat.categories_add, name="categories_add"),
+    path("modules/categories/<int:pk>/edit/", cat.categories_edit, name="categories_edit"),
+    path("modules/categories/<int:pk>/delete/", cat.categories_delete, name="categories_delete"),
 ]
 
-# http://127.0.0.1:8000/tienda/product/1/
-
-urlpatterns += [
-    path('accounts/login/', views.login_view),  # Redirige a la vista personalizada
-]

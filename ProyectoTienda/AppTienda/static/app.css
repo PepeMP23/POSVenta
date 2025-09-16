@@ -1,0 +1,9 @@
+:root{
+  --brand:#2b59ff; --brand-600:#254de0; --ink:#111827; --muted:#6b7280;
+  --border:#e5e7eb; --bg:#f8fafc; --card:#ffffff; --success:#22c55e;
+  --danger:#ef4444; --warning:#f59e0b;
+}
+body{ background:var(--bg); color:var(--ink); }
+.brand{ color:var(--brand)!important; }
+.card{ border:1px solid var(--border); border-radius:16px; }
+.kpi{ border-radius:16px; background:var(--card); padding:16px; border:1px solid var(--border); }

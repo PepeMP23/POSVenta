@@ -1,103 +1,139 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils import timezone
-from datetime import timedelta
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.core.validators import MinValueValidator
+from decimal import Decimal
+
+# ---------- USER ----------
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+    def _create_user(self, email, password, **extra):
+        if not email:
+            raise ValueError("El email es obligatorio")
+        email = self.normalize_email(email)
+        user = self.model(email=email, username=email, **extra)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+    def create_user(self, email, password=None, **extra):
+        extra.setdefault('is_staff', False)
+        extra.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra)
+    def create_superuser(self, email, password=None, **extra):
+        extra.setdefault('is_staff', True)
+        extra.setdefault('is_superuser', True)
+        return self._create_user(email, password, **extra)
 
 class User(AbstractUser):
+    """
+    Solo roles admin/vendor. El customer es tabla aparte.
+    """
+    username = models.CharField(max_length=150, blank=True)
     email = models.EmailField(unique=True)
-    role = models.CharField(max_length=10, choices=[('customer', 'Customer'), ('vendor', 'Vendor'), ('admin', 'Admin')])
+    ROLE_CHOICES = (('admin', 'Admin'), ('vendor', 'Vendor'))
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='vendor')
     created_at = models.DateTimeField(auto_now_add=True)
-    image_url = models.CharField(max_length=255, blank=True, null=True)
+    image_url = models.CharField(max_length=255, blank=True, default="")
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+    objects = UserManager()
+    def __str__(self):  # pragma: no cover
+        return f"{self.email} ({self.role})"
 
-    def __str__(self):
-        return self.username
 
-class Store(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    address = models.CharField(max_length=255)
-    google_maps_link = models.CharField(max_length=255, blank=True, null=True)
-    email = models.EmailField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+# ---------- CUSTOMER (separado de User) ----------
+class Customer(models.Model):
+    first_name = models.CharField(max_length=150, blank=True, default="")
+    last_name  = models.CharField(max_length=150, blank=True, default="")
+    address    = models.CharField(max_length=255, blank=True, default="")
+    phone      = models.CharField(max_length=30,  blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
-    image_url = models.CharField(max_length=255, blank=True, null=True)
+    def __str__(self):  # pragma: no cover
+        return f"{self.first_name} {self.last_name}".strip()
 
-    def __str__(self):
-        return self.name
 
+# ---------- CATEGORY ----------
 class Category(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    description = models.TextField(blank=True, null=True)
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
+    class Meta:
+        ordering = ['name']
+    def __str__(self):  # pragma: no cover
         return self.name
 
+
+# ---------- PRODUCT ----------
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    stock = models.DecimalField(max_digits=10, decimal_places=2)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    description = models.TextField(blank=True, default="")
+    price = models.FloatField(validators=[MinValueValidator(0.0)])  # DOUBLE
+    stock = models.PositiveIntegerField(default=0)  # 👈 entero
     created_at = models.DateTimeField(auto_now_add=True)
-    image_url = models.CharField(max_length=255, blank=True, null=True)
+    image_url = models.CharField(max_length=255, blank=True, default="")
+    category = models.ForeignKey('Category', on_delete=models.PROTECT, null=True, related_name='products')
+
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return self.name
 
-class Payment(models.Model):
-    payment_type = models.CharField(max_length=255)
-    card_number = models.CharField(max_length=4)
+
+# ---------- STOCK ENTRIES (altas de inventario) ----------
+class StockEntry(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='stock_entries')
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])  # 👈 entero
+    note = models.CharField(max_length=255, blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"{self.payment_type} - {self.card_number}"
-
-class Orders(models.Model):
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
-    order_date = models.DateTimeField(auto_now_add=True)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
-    address = models.CharField(max_length=255)
+    def save(self, *a, **kw):
+        is_new = self.pk is None
+        super().save(*a, **kw)
+        if is_new:
+            self.product.stock = (self.product.stock or 0) + int(self.quantity)
+            self.product.save(update_fields=['stock'])
 
     def __str__(self):
-        return f"Order {self.id}"
+        return f"{self.product} +{self.quantity}"
 
-class OrderItem(models.Model):
-    order = models.ForeignKey(Orders, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
-    quantity = models.DecimalField(max_digits=10, decimal_places=2)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    shipping_date = models.DateTimeField()
-    promotion_applied = models.BooleanField(default=False)
-    promotion = models.ForeignKey('Promotion', on_delete=models.SET_NULL, null=True, blank=True)
+
+# ---------- SALE (descuenta stock del producto) ----------
+class Sale(models.Model):
+    product = models.ForeignKey('Product', on_delete=models.PROTECT, related_name='sales')
+    customer = models.ForeignKey('Customer', null=True, blank=True, on_delete=models.SET_NULL, related_name='sales')
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])   # entero
+    unit_price = models.FloatField(validators=[MinValueValidator(0.0)])        # se fija desde product
+    total_amount = models.FloatField(default=0.0)                               # 👈 nuevo: total guardado
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created_at']
+
+    @property
+    def total_price(self) -> float:
+        # compat: sigue existiendo como propiedad
+        return float(self.total_amount)
+
+    def save(self, *args, **kwargs):
+        # completa unit_price si no viene (ya no lo pedimos en el form)
+        if (self.unit_price is None or self.unit_price == 0) and self.product_id:
+            self.unit_price = float(self.product.price)
+
+        # calcula y guarda el total
+        self.total_amount = round(float(self.unit_price) * int(self.quantity or 0), 2)
+
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+
+        # descuenta stock solo en la creación
+        if is_new:
+            prod = self.product
+            new_stock = int(prod.stock or 0) - int(self.quantity)
+            if new_stock < 0:
+                self.delete()
+                raise ValueError("Stock insuficiente para esta venta")
+            prod.stock = new_stock
+            prod.save(update_fields=['stock'])
+
     def __str__(self):
-        return f"OrderItem {self.id} for Order {self.order.id}"
-
-class Promotion(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    discount = models.DecimalField(max_digits=5, decimal_places=2)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Promotion {self.id} for Product {self.product.name}"
-
-class ShoppingCart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"ShoppingCart for {self.user.username}"
-
-class CartItem(models.Model):
-    cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-
-    def __str__(self):
-        return f"CartItem {self.id} for Cart {self.cart.id}"
+        return f"Sale #{self.pk} - {self.product} x {self.quantity}"

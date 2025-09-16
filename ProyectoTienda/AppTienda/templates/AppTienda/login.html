@@ -1,0 +1,25 @@
+{% extends "AppTienda/base.html" %}
+{% block title %}Login | POS{% endblock %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height:70vh;">
+  <div class="card p-4" style="max-width: 420px; width:100%;">
+    <h1 class="h4 mb-3">Iniciar sesión</h1>
+    {% if messages %}{% for m in messages %}<div class="alert alert-{{ m.tags }} py-2">{{ m }}</div>{% endfor %}{% endif %}
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="mb-3">
+        <label class="form-label">Correo corporativo</label>
+        {{ form.email }}
+        {% for e in form.email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        {{ form.password }}
+        {% for e in form.password.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+      </div>
+      {% for e in form.non_field_errors %}<div class="text-danger small mb-2">{{ e }}</div>{% endfor %}
+      <button class="btn btn-primary w-100">Entrar</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

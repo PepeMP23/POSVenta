@@ -1,0 +1,15 @@
+{% extends "AppTienda/base.html" %}
+{% block title %}{{ title }} | POS{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="card p-3">
+    <h1 class="h5 mb-3">{{ title }}</h1>
+    <p>¿Seguro que deseas eliminar este registro?</p>
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn btn-danger">Eliminar</button>
+      <a class="btn btn-outline-secondary" href="javascript:history.back()">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
